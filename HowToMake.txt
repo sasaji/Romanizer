@@ -1,0 +1,23 @@
+素のkakasi-2.3.6を展開する。
+
+MinGWをインストール。Packageは以下。
+mingw-developer-toolkit-bin
+mingw32-base-bin
+msys-base-bin
+
+パスを通す。
+C:\MinGW\bin
+C:\MinGW\msys\1.0\bin
+C:\MinGW\mingw32\bin
+
+patchを当てる。
+patch < kakasi.patch
+
+メイクする。
+sh
+./configure --enable-utf8=no
+make
+
+cd lib
+vcvarsall amd64
+make -f makefile.msc

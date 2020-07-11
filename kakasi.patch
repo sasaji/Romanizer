@@ -1,0 +1,64 @@
+diff -uprN ../../../../Desktop/kakasi-2.3.6.tar/kakasi-2.3.6/src/dict.c ./kakasi-2.3.6/src/dict.c
+--- ../../../../Desktop/kakasi-2.3.6.tar/kakasi-2.3.6/src/dict.c	2014-02-13 16:30:35 +0900
++++ ./kakasi-2.3.6/src/dict.c	2017-06-16 14:29:57 +0900
+@@ -58,6 +58,10 @@ typedef int uintptr_t;
+ #define KANWADICT "./kanwadict"
+ #endif
+ 
++#if defined(_WIN32) || defined(__MINGW32__)
++#include <windows.h>
++#endif
++
+ /* variables for memory management */
+ void ** ary_charalloc = NULL;
+ void ** ary_cellalloc = NULL;
+@@ -333,6 +337,17 @@ void init_kanwa()
+     char magic[6];
+     int kanwa_offset;
+ 
++#if defined(_WIN32) || defined(__MINGW32__)
++    int bufSize = GetEnvironmentVariable("KANWADICTPATH", kanwadictpath, 0);
++    kanwadictpath = (char*)malloc(bufSize);
++    GetEnvironmentVariable("KANWADICTPATH", kanwadictpath, bufSize);
++    if (kanwadictpath == (char*)NULL) {
++        bufSize = GetEnvironmentVariable("KANWADICT", kanwadictpath, 0);
++        kanwadictpath = (char*)malloc(bufSize);
++        GetEnvironmentVariable("KANWADICT", kanwadictpath, bufSize);
++    }
++    if (kanwadictpath == (char*)NULL)
++#endif
+     kanwadictpath = (char*)getenv("KANWADICTPATH");
+     if (kanwadictpath == (char*)NULL)
+ 	kanwadictpath = (char*)getenv("KANWADICT");
+diff -uprN ../../../../Desktop/kakasi-2.3.6.tar/kakasi-2.3.6/src/itaiji.c ./kakasi-2.3.6/src/itaiji.c
+--- ../../../../Desktop/kakasi-2.3.6.tar/kakasi-2.3.6/src/itaiji.c	2007-03-12 15:43:05 +0900
++++ ./kakasi-2.3.6/src/itaiji.c	2017-06-16 14:29:54 +0900
+@@ -30,6 +30,10 @@
+ #define ITAIJIDICT "./itaijidict"
+ #endif
+ 
++#if defined(_WIN32) || defined(__MINGW32__)
++#include <windows.h>
++#endif
++
+ /* The change table of ITAIJI is made. */
+ 
+ static unsigned char ittbl1[0x80][0x80], ittbl2[0x80][0x80];
+@@ -44,6 +48,17 @@ mkitaijitbl()
+     unsigned char n1, n2, o1, o2;
+     char *itaijidictpath;
+     
++#if defined(_WIN32) || defined(__MINGW32__)
++    int bufSize = GetEnvironmentVariable("ITAIJIDICTPATH", itaijidictpath, 0);
++    itaijidictpath = (char*)malloc(bufSize);
++    GetEnvironmentVariable("ITAIJIDICTPATH", itaijidictpath, bufSize);
++    if (itaijidictpath == (char*)NULL) {
++        bufSize = GetEnvironmentVariable("ITAIJIDICT", itaijidictpath, 0);
++        itaijidictpath = (char*)malloc(bufSize);
++        GetEnvironmentVariable("ITAIJIDICT", itaijidictpath, bufSize);
++    }
++    if (itaijidictpath == (char*)NULL)
++#endif
+     itaijidictpath = (char*)getenv("ITAIJIDICTPATH");
+     if (itaijidictpath == (char*)NULL)
+ 	itaijidictpath = (char*)getenv("ITAIJIDICT");
